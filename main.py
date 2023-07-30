@@ -30,6 +30,7 @@ WAIT = 8
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
+    options.headless = True
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
