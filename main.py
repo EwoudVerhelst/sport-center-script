@@ -22,7 +22,7 @@ URL = "https://usc.kuleuven.cloud/nl/members/login"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.INDOOR
 TOMOROW = get_tommorow()
-TIME = "08:00"
+TIME = "10:00"
 
 WAIT = 8
 
@@ -30,7 +30,7 @@ WAIT = 8
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
-    options.headless = True
+    # options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
@@ -81,7 +81,7 @@ def find_and_reserve_element(driver, product, time_value):
             reserveer_btns = driver.find_elements(By.CLASS_NAME, "btn-primary")
             print(f"found {len(reserveer_btns)} reserveer buttons")
             reserveer_btn = reserveer_btns[-1]
-            # reserveer_btn.click()
+            reserveer_btn.click()
             return True
 
     time.sleep(WAIT)
