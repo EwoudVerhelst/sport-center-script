@@ -8,6 +8,17 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 from enums import Sport, days, Product
 from helpers import day_of_week, get_tommorow
+from datetime import datetime, timedelta
+
+#######
+# Date where we want to play volleyball
+TARGET_BOOK_DATE = "10/08/2023"
+SPORT = Sport.BEACHVOLLEY
+PRODUCT = Product.OUTDOOR
+TIME = ["17:00", "18:00"]
+
+#######
+
 
 # Replace the following with your actual login credentials
 USERNAME = "u0158887"
@@ -21,11 +32,6 @@ DRIVER_PATH = "/home/ewoudverhelst/code-projects/sport-center-script/geckodriver
 # URL of the login page
 URL = "https://usc.kuleuven.cloud/nl/members/login"
 
-# Sport and date
-SPORT = Sport.BEACHVOLLEY
-PRODUCT = Product.OUTDOOR
-TOMOROW = get_tommorow()
-TIME = ["18:00", "19:00"]
 
 WAIT = 4
 
@@ -33,7 +39,7 @@ WAIT = 4
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
-    # options.headless = True
+    options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
@@ -146,21 +152,35 @@ def login_to_webpage(driver, username, password):
 
 
 if __name__ == "__main__":
-    driver = init_driver()
+    date_format = "%d/%m/%Y"
+    target_book_date = (datetime.strptime(TARGET_BOOK_DATE, date_format)).date()
+    target_script_run_date = target_book_date - timedelta(days=1)
+    today = datetime.today().date()
 
-    login_to_webpage(driver, USERNAME, PASSWORD)
+    print(f"target book date: {target_book_date}")
+    print(f"target run date: {target_script_run_date}")
+    print(f"today: {today}")
 
-    time.sleep(WAIT)
+    if today != target_script_run_date:
+        print("today is not the day")
 
-    filter_sport_and_date(driver, SPORT.value, TOMOROW)
+    else:
+        print("today is the day")
 
-    time.sleep(WAIT)
+        driver = init_driver()
 
-    for chosen_time in TIME:
-        success = find_and_reserve_element(driver, PRODUCT.value, chosen_time)
-
-        print(f"reserve Status:  {success}")
+        login_to_webpage(driver, USERNAME, PASSWORD)
 
         time.sleep(WAIT)
 
-    driver.quit()
+        filter_sport_and_date(driver, SPORT.value, get_tommorow())
+
+        time.sleep(WAIT)
+
+        for chosen_time in TIME:
+            success = find_and_reserve_element(driver, PRODUCT.value, chosen_time)
+            print(f"reserve Status:  {success}")
+
+            time.sleep(WAIT)
+
+        driver.quit()
