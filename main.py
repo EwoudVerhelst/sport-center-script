@@ -2,6 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 from enums import Sport, days, Product
 from helpers import day_of_week, get_tommorow
@@ -20,17 +23,17 @@ URL = "https://usc.kuleuven.cloud/nl/members/login"
 
 # Sport and date
 SPORT = Sport.BEACHVOLLEY
-PRODUCT = Product.INDOOR
+PRODUCT = Product.OUTDOOR
 TOMOROW = get_tommorow()
-TIME = "08:00"
+TIME = ["18:00", "19:00"]
 
-WAIT = 8
+WAIT = 4
 
 
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
-    options.headless = True
+    # options.headless = True
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
@@ -60,9 +63,30 @@ def find_and_reserve_element(driver, product, time_value):
             By.XPATH, f"//strong[contains(text(), '{time_value}')]"
         )
 
+    # Calculate the height of the viewport (visible area of the page).
+    viewport_height = driver.execute_script("return window.innerHeight;")
+
+    # Get the Y coordinate of the element on the page.
+    element_y = elements[0].location["y"]
+
+    # Calculate the vertical scroll position to center the element on the screen.
+    scroll_y = element_y - (viewport_height / 2)
+
+    # Scroll to the calculated position.
+    driver.execute_script(f"window.scrollTo(0, {scroll_y});")
+
+    time.sleep(WAIT)
+    elements = driver.find_elements(
+        By.XPATH,
+        f"//*[@id='content']/bookable-product-index/div/bookable-product-schedule/bookable-slot-list/div/div/div/div/p/strong[contains(text(), '{time_value}')]",
+    )
+
     print(f"found {len(elements)} elements")
     for element in elements:
+        # time.sleep(WAIT)
         print(element)
+
+        time.sleep(WAIT)
         element.click()
         print("element clicked")
 
@@ -81,7 +105,10 @@ def find_and_reserve_element(driver, product, time_value):
             reserveer_btns = driver.find_elements(By.CLASS_NAME, "btn-primary")
             print(f"found {len(reserveer_btns)} reserveer buttons")
             reserveer_btn = reserveer_btns[-1]
-            # reserveer_btn.click()
+            reserveer_btn.click()
+            time.sleep(1)
+            close_btn = driver.find_element(By.CLASS_NAME, "btn-close")
+            close_btn.click()
             return True
 
     time.sleep(WAIT)
@@ -129,10 +156,11 @@ if __name__ == "__main__":
 
     time.sleep(WAIT)
 
-    success = find_and_reserve_element(driver, PRODUCT.value, TIME)
+    for chosen_time in TIME:
+        success = find_and_reserve_element(driver, PRODUCT.value, chosen_time)
 
-    print(f"reserve Status:  {success}")
+        print(f"reserve Status:  {success}")
 
-    time.sleep(WAIT)
+        time.sleep(WAIT)
 
     driver.quit()
