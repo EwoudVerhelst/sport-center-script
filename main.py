@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 TARGET_BOOK_DATE = "9/08/2023"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.OUTDOOR
-TIME = ["12:00", "13:00"]
+TIME = ["13:00", "14:00"]
 
 #######
 
