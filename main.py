@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 TARGET_BOOK_DATE = "9/08/2023"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.OUTDOOR
-TIME = ["13:00", "14:00"]
+TIME = ["11:00", "12:00"]
 
 #######
 
@@ -39,7 +39,7 @@ WAIT = 4
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
-    options.add_argument("headless")
+    # options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
