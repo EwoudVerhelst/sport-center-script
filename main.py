@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 #######
 # Date where we want to play volleyball
-TARGET_BOOK_DATE = "9/08/2023"
+TARGET_BOOK_DATE = "09/08/2023"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.OUTDOOR
 TIME = ["11:00", "12:00"]
@@ -39,7 +39,7 @@ WAIT = 4
 def init_driver():
     options = Options()
     options.page_load_strategy = "normal"
-    # options.add_argument("headless")
+    options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
     driver.get(URL)
     return driver
@@ -165,22 +165,26 @@ if __name__ == "__main__":
         print("today is not the day")
 
     else:
-        print("today is the day")
+        try:
+            print("today is the day")
 
-        driver = init_driver()
+            driver = init_driver()
 
-        login_to_webpage(driver, USERNAME, PASSWORD)
-
-        time.sleep(WAIT)
-
-        filter_sport_and_date(driver, SPORT.value, get_tommorow())
-
-        time.sleep(WAIT)
-
-        for chosen_time in TIME:
-            success = find_and_reserve_element(driver, PRODUCT.value, chosen_time)
-            print(f"reserve Status:  {success}")
+            login_to_webpage(driver, USERNAME, PASSWORD)
 
             time.sleep(WAIT)
 
-        driver.quit()
+            filter_sport_and_date(driver, SPORT.value, get_tommorow())
+
+            time.sleep(WAIT)
+
+            for chosen_time in TIME:
+                success = find_and_reserve_element(driver, PRODUCT.value, chosen_time)
+                print(f"reserve Status:  {success}")
+
+                time.sleep(WAIT)
+        except Exception as e:
+            print(e)
+
+        finally:
+            driver.quit()
