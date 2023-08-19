@@ -28,7 +28,7 @@ PASSWORD = "5z66MgPRD7MyBS"
 # Path to the browser driver. Download the appropriate driver and provide its path.
 # Example: For Chrome, download chromedriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
 # For Firefox, download geckodriver from https://github.com/mozilla/geckodriver/releases
-DRIVER_PATH = "./webdrivers/chromedriver-win32_116/chromedriver.exe"
+DRIVER_PATH = "./webdrivers/geckodriver-v0.32.2-win64/geckodriver.exe"
 
 # URL of the login page
 URL = "https://usc.kuleuven.cloud/nl/members/login"
@@ -41,12 +41,12 @@ def init_driver():
     #options
     options = Options()
     options.page_load_strategy = "normal"
-    options.add_argument("headless")
+    # options.add_argument("headless")
 
     #service
     service = Service(executable_path=DRIVER_PATH)
     
-    driver = webdriver.Chrome(options=options, service=service)
+    driver = webdriver.Firefox(options=options, service=service)
 
     driver.get(URL)
     return driver
