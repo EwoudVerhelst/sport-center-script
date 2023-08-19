@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -27,7 +28,7 @@ PASSWORD = "5z66MgPRD7MyBS"
 # Path to the browser driver. Download the appropriate driver and provide its path.
 # Example: For Chrome, download chromedriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
 # For Firefox, download geckodriver from https://github.com/mozilla/geckodriver/releases
-DRIVER_PATH = "/home/ewoudverhelst/code-projects/sport-center-script/geckodriver"
+DRIVER_PATH = "./webdrivers/chromedriver-win32_116/chromedriver.exe"
 
 # URL of the login page
 URL = "https://usc.kuleuven.cloud/nl/members/login"
@@ -37,10 +38,16 @@ WAIT = 4
 
 
 def init_driver():
+    #options
     options = Options()
     options.page_load_strategy = "normal"
     options.add_argument("headless")
-    driver = webdriver.Chrome(options=options)
+
+    #service
+    service = Service(executable_path=DRIVER_PATH)
+    
+    driver = webdriver.Chrome(options=options, service=service)
+
     driver.get(URL)
     return driver
 
