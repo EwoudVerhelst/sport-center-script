@@ -168,7 +168,9 @@ if __name__ == "__main__":
         try:
             print("today is the day")
 
+            print("initializeing driver")
             driver = init_driver()
+            print("driver initialized")
 
             login_to_webpage(driver, USERNAME, PASSWORD)
 
@@ -185,6 +187,5 @@ if __name__ == "__main__":
                 time.sleep(WAIT)
         except Exception as e:
             print(e)
-
         finally:
             driver.quit()
