@@ -167,6 +167,7 @@ if __name__ == "__main__":
     else:
         try:
             print("today is the day")
+            driver = None
 
             print("initializeing driver")
             driver = init_driver()
@@ -188,4 +189,5 @@ if __name__ == "__main__":
         except Exception as e:
             print(e)
         finally:
-            driver.quit()
+            if driver is not None:
+                driver.quit()
