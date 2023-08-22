@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -12,7 +13,7 @@ from datetime import datetime, timedelta
 
 #######
 # Date where we want to play volleyball
-TARGET_BOOK_DATE = "18/08/2023"
+TARGET_BOOK_DATE = "20/08/2023"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.OUTDOOR
 TIME = ["12:00", "13:00"]
@@ -27,7 +28,7 @@ PASSWORD = "5z66MgPRD7MyBS"
 # Path to the browser driver. Download the appropriate driver and provide its path.
 # Example: For Chrome, download chromedriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
 # For Firefox, download geckodriver from https://github.com/mozilla/geckodriver/releases
-DRIVER_PATH = "/home/ewoudverhelst/code-projects/sport-center-script/geckodriver"
+DRIVER_PATH = "./webdrivers/geckodriver-v0.32.2-win64/geckodriver.exe"
 
 # URL of the login page
 URL = "https://usc.kuleuven.cloud/nl/members/login"
@@ -37,10 +38,16 @@ WAIT = 4
 
 
 def init_driver():
+    #options
     options = Options()
     options.page_load_strategy = "normal"
-    options.add_argument("headless")
-    driver = webdriver.Chrome(options=options)
+    # options.add_argument("headless")
+
+    #service
+    service = Service(executable_path=DRIVER_PATH)
+    
+    driver = webdriver.Firefox(options=options, service=service)
+
     driver.get(URL)
     return driver
 
@@ -167,8 +174,11 @@ if __name__ == "__main__":
     else:
         try:
             print("today is the day")
+            driver = None
 
+            print("initializeing driver")
             driver = init_driver()
+            print("driver initialized")
 
             login_to_webpage(driver, USERNAME, PASSWORD)
 
@@ -185,6 +195,6 @@ if __name__ == "__main__":
                 time.sleep(WAIT)
         except Exception as e:
             print(e)
-
         finally:
-            driver.quit()
+            if driver is not None:
+                driver.quit()
