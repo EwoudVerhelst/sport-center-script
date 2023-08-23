@@ -3,10 +3,12 @@ version: '3.8'
 services:
   script:
     build: .
-    command: [ "python", "main.py" ]
+    # command: [ "python3", "test.py" ]
     volumes:
       - .:/app
+      - /dev/shm:/dev/shm
     ports:
       - "8000:8000"
+      - "4444:4444"
     environment:
       - DEBUG=1

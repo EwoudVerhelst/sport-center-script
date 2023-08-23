@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 #######
 # Date where we want to play volleyball
-TARGET_BOOK_DATE = "20/08/2023"
+TARGET_BOOK_DATE = "24/08/2023"
 SPORT = Sport.BEACHVOLLEY
 PRODUCT = Product.OUTDOOR
 TIME = ["12:00", "13:00"]
@@ -38,17 +38,28 @@ WAIT = 4
 
 
 def init_driver():
-    #options
-    options = Options()
-    options.page_load_strategy = "normal"
+    # options
+    # options = Options()
+    # options.page_load_strategy = "normal"
     # options.add_argument("headless")
+    # options.add_argument("--no-sandbox")
+    # options.add_argument("--disable-dev-shm-usage")
 
-    #service
-    service = Service(executable_path=DRIVER_PATH)
-    
-    driver = webdriver.Firefox(options=options, service=service)
+    # command_executor = "http://localhost:4444/wd/hub"
 
-    driver.get(URL)
+    # service
+    # service = Service(executable_path=DRIVER_PATH)
+
+    # driver = webdriver.Firefox(options=options)
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("--ignore-ssl-errors=yes")
+    options.add_argument("--ignore-certificate-errors")
+    driver = webdriver.Remote(
+        command_executor="http://172.18.0.2:4444/wd/hub", options=options
+    )
+
+    # driver.get(URL)
     return driver
 
 
@@ -179,6 +190,7 @@ if __name__ == "__main__":
             print("initializeing driver")
             driver = init_driver()
             print("driver initialized")
+            driver.get(URL)
 
             login_to_webpage(driver, USERNAME, PASSWORD)
 
